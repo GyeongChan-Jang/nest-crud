@@ -31,4 +31,17 @@ export class BoardsService {
   deleteBoard(id: string): void {
     this.boards = this.boards.filter((board) => board.id !== id)
   }
+
+  // 내가 만든거 getBoardById 메서드 사용하지 않음..
+  // updateBoardStatus(id: string, status: BoardStatus): void {
+  //   this.boards.map((board) =>
+  //     board.id === id ? (board.status = status) : board
+  //   )
+  // }
+
+  updateBoardStatus(id: string, status: BoardStatus): Board {
+    const board = this.getBoardById(id)
+    board.status = status
+    return board
+  }
 }
