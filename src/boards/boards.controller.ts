@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common'
 import { BoardsService } from './boards.service'
 import { Board, BoardStatus } from './board.model'
@@ -22,10 +24,12 @@ export class BoardsController {
   }
 
   @Post()
-  createBoard(@Body() CreateBoardDto: CreateBoardDto): Board {
-    console.log(CreateBoardDto)
+  // 파이프를 핸들러 레벨에서 생성
+  @UsePipes(ValidationPipe)
+  createBoard(@Body() createBoardDto: CreateBoardDto): Board {
+    console.log(createBoardDto)
 
-    return this.boardsService.createBoard(CreateBoardDto)
+    return this.boardsService.createBoard(createBoardDto)
   }
 
   @Get('/:id')

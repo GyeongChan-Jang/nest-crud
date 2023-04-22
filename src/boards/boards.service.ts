@@ -1,5 +1,5 @@
 import { CreateBoardDto } from './dto/create-board.dto'
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { BoardStatus, Board } from './board.model'
 import { v1 as uuid } from 'uuid'
 
@@ -12,8 +12,8 @@ export class BoardsService {
     return this.boards
   }
 
-  createBoard(CreateBoardDto: CreateBoardDto) {
-    const { title, description } = CreateBoardDto
+  createBoard(createBoardDto: CreateBoardDto) {
+    const { title, description } = createBoardDto
     const board: Board = {
       id: uuid(),
       title,
@@ -25,11 +25,16 @@ export class BoardsService {
   }
 
   getBoardById(id: string): Board {
-    return this.boards.find((board) => board.id === id)
+    const found = this.boards.find((board) => board.id === id)
+    if (!found) {
+      throw new NotFoundException(`cant't not found with ${id}`)
+    }
+    return found
   }
 
   deleteBoard(id: string): void {
-    this.boards = this.boards.filter((board) => board.id !== id)
+    const found = this.getBoardById(id)
+    this.boards = this.boards.filter((board) => board.id !== found.id)
   }
 
   // 내가 만든거 getBoardById 메서드 사용하지 않음..
