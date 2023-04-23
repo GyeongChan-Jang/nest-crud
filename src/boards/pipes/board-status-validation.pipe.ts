@@ -17,6 +17,7 @@ export class BoardStatusValidationPipe implements PipeTransform {
     }
   }
 
+  // 정해둔 status의 맞는지 검증하는 함수
   private isStatusValid(status: any) {
     const index = this.StatusOptions.indexOf(status)
     return index !== -1
