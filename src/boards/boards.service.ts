@@ -12,6 +12,7 @@ export class BoardsService {
     return this.boards
   }
 
+  // DTO 사용
   createBoard(createBoardDto: CreateBoardDto) {
     const { title, description } = createBoardDto
     const board: Board = {
@@ -27,12 +28,14 @@ export class BoardsService {
   getBoardById(id: string): Board {
     const found = this.boards.find((board) => board.id === id)
     if (!found) {
-      throw new NotFoundException(`cant't not found with ${id}`)
+      throw new NotFoundException(`Can't find Board with id ${id}`)
     }
     return found
   }
 
   deleteBoard(id: string): void {
+    // 없는 게시물을 지우려 할 때 결과 값 예외처리
+    // getBoardById에서 존재 여부를 체크하기 때문에 따로 예외처리를 하지 않아도됨
     const found = this.getBoardById(id)
     this.boards = this.boards.filter((board) => board.id !== found.id)
   }
