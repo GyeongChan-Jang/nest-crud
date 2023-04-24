@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -49,6 +50,11 @@ export class BoardsController {
   // getBoardById(@Param('id') id: string): Board {
   //   return this.boardsService.getBoardById(id)
   // }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id): Promise<void> {
+    return this.boardsService.deleteBoard(id)
+  }
 
   // @Delete('/:id')
   // deleteBoard(@Param('id') id: string): void {

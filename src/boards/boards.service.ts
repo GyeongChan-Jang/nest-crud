@@ -31,16 +31,8 @@ export class BoardsService {
   //   return board
   // }
 
-  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    const { title, description } = createBoardDto
-
-    const board = this.boardRepository.create({
-      title,
-      description,
-      status: BoardStatus.PUBLIC,
-    })
-    await this.boardRepository.save(board)
-    return board
+  createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    return this.boardRepository.createBoard(createBoardDto)
   }
 
   async getBoardById(id: number): Promise<Board> {
@@ -62,6 +54,16 @@ export class BoardsService {
   //   }
   //   return found
   // }
+
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.delete(id)
+
+    // DB에 해당 데이터가 없는경우 에러 처리
+    if (result.affected === 0) {
+      throw new NotFoundException(`Cant't find Board with id ${id}`)
+    }
+  }
+
   // deleteBoard(id: string): void {
   //   // 없는 게시물을 지우려 할 때 결과 값 예외처리
   //   // getBoardById에서 존재 여부를 체크하기 때문에 따로 예외처리를 하지 않아도됨
