@@ -9,7 +9,8 @@ import { Board } from './board.entity'
 @Injectable()
 export class BoardsService {
   constructor(
-    @InjectRepository(BoardRepository) private boardRepository: BoardRepository
+    // @InjectRepository(BoardRepository) private boardRepository: BoardRepository
+    private readonly boardRepository: BoardRepository
   ) {}
 
   // 다른곳에서 접근하지 못하게 Private 사용
@@ -30,8 +31,24 @@ export class BoardsService {
   //   return board
   // }
 
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    const { title, description } = createBoardDto
+
+    const board = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+    })
+    await this.boardRepository.save(board)
+    return board
+  }
+
   async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne(id)
+    const found = await this.boardRepository.findOne({
+      where: {
+        id,
+      },
+    })
     if (!found) {
       throw new NotFoundException(`Cna't find Board with id ${id}`)
     }

@@ -1,14 +1,22 @@
-import { Repository } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 import { Board } from './board.entity'
+import { CustomRepository } from './CustomRepository'
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
-  constructor(
-    @InjectRepository(Board)
-    private readonly repository: Repository<Board>
-  ) {
-    super(repository.target, repository.manager, repository.queryRunner)
+  constructor(private dataSource: DataSource) {
+    super(Board, dataSource.createEntityManager())
   }
 }
+
+// @CustomRepository(Board)
+// export class BoardRepository extends Repository<Board> {}
+
+// @Injectable()
+// export class BoardRepository {
+//   constructor(
+//     @InjectRepository(Board)
+//     private boardRepository: Repository<Board>
+//   ) {}
+// }
