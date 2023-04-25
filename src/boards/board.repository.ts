@@ -23,14 +23,3 @@ export class BoardRepository extends Repository<Board> {
     return board
   }
 }
-
-// @CustomRepository(Board)
-// export class BoardRepository extends Repository<Board> {}
-
-// @Injectable()
-// export class BoardRepository {
-//   constructor(
-//     @InjectRepository(Board)
-//     private boardRepository: Repository<Board>
-//   ) {}
-// }
