@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common'
+import * as bcrypt from 'bcryptjs'
 import { DataSource, Repository } from 'typeorm'
 import { User } from './user.entity'
 import { AuthCredentialsDto } from './auth-credential.dto'
@@ -15,7 +16,12 @@ export class UserRepository extends Repository<User> {
 
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto
-    const user = this.create({ username, password })
+
+    // 해쉬한 값을 비밀번호와 결합하여 한번 더 해쉬
+    const salt = await bcrypt.genSalt()
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    const user = this.create({ username, password: hashedPassword })
     try {
       await this.save(user)
     } catch (error) {
