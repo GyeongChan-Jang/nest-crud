@@ -5,13 +5,14 @@ import { UserRepository } from './user.repository'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './user.entity'
 import { ExtractJwt } from 'passport-jwt'
+import * as config from 'config'
 // JWT 검증할 때 사용하는 전략 파일
 // request를 받으면 헤더에 있는 토큰 검증
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(@InjectRepository(UserRepository) private userRepository: UserRepository) {
     super({
-      secretOrKey: 'Secret1234',
+      secretOrKey: process.env.JWT_SECRET || config.get('jwt.secret'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     })
   }
