@@ -17,6 +17,8 @@ import { CreateBoardDto } from './dto/create-board.dto'
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 import { Board } from './board.entity'
 import { AuthGuard } from '@nestjs/passport'
+import { GetUser } from 'src/auth/get-user.decorater'
+import { User } from 'src/auth/user.entity'
 
 @Controller('boards')
 @UseGuards(AuthGuard()) // 로그인된(인증된) 사용자만 접근 가능
@@ -28,8 +30,8 @@ export class BoardsController {
   }
   @Post()
   @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoard: CreateBoardDto): Promise<Board> {
-    return this.boardsService.createBoard(createBoard)
+  createBoard(@Body() createBoard: CreateBoardDto, @GetUser() user: User): Promise<Board> {
+    return this.boardsService.createBoard(createBoard, user)
   }
 
   @Get('/:id')
