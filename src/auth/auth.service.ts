@@ -17,9 +17,7 @@ export class AuthService {
     return this.userRepository.createUser(authCredentialsDto)
   }
 
-  async signIn(
-    authCredentialsDto: AuthCredentialsDto
-  ): Promise<{ accessToken: string }> {
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
     const { username, password } = authCredentialsDto
     const user = await this.userRepository.findOneBy({ username })
 

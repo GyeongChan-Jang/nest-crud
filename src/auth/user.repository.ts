@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common'
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
 import { DataSource, Repository } from 'typeorm'
 import { User } from './user.entity'
