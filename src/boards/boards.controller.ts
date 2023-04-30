@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -23,6 +24,7 @@ import { User } from 'src/auth/user.entity'
 @Controller('boards')
 @UseGuards(AuthGuard()) // 로그인된(인증된) 사용자만 접근 가능
 export class BoardsController {
+  private logger = new Logger('BoardsController')
   constructor(private boardsService: BoardsService) {}
   @Get()
   getAllBoard(): Promise<Board[]> {
@@ -31,7 +33,7 @@ export class BoardsController {
 
   @Get('/my')
   getMyBoard(@GetUser() user: User): Promise<Board[]> {
-    console.log(user)
+    this.logger.verbose(`User ${user.username} trying to get all boards`)
     return this.boardsService.getMyBoards(user)
   }
 
@@ -43,6 +45,9 @@ export class BoardsController {
   @Post()
   @UsePipes(ValidationPipe)
   createBoard(@Body() createBoard: CreateBoardDto, @GetUser() user: User): Promise<Board> {
+    this.logger.verbose(
+      `User ${user.username} creating a new board. Payload: ${JSON.stringify(createBoard)}`
+    )
     return this.boardsService.createBoard(createBoard, user)
   }
 
