@@ -49,12 +49,42 @@ export class BoardsService {
     return board
   }
 
-  async deleteBoard(id: number): Promise<void> {
-    const result = await this.boardRepository.delete(id)
+  async deleteBoard(id: number, user: User): Promise<void> {
+    // console.log(id)
+    // const result = await this.boardRepository.delete({ id })
+    const query = this.boardRepository.createQueryBuilder('board')
 
-    // DB에 해당 데이터가 없는경우 에러 처리
-    if (result.affected === 0) {
-      throw new NotFoundException(`Cant't find Board with id ${id}`)
+    query.where('board.id = :boardId', { boardId: id })
+    const isBoard = await query.getMany()
+    if (isBoard.length === 0) {
+      throw new NotFoundException(`Can't not found Board with id ${id}`)
+    } else {
+      query
+        .where('board.id = :boardId', { boardId: id })
+        .andWhere('board.userId = :userId', { userId: user.id })
+      const result = await query.getMany()
+      if (result.length === 0) {
+        throw new NotFoundException('본인의 게시물만 지울 수 있습니다!')
+      }
+      await this.boardRepository.delete(id)
     }
+
+    // if (isBoard.length === 0) {
+    //   throw new NotFoundException(`Cant't find Board with id ${id}`)
+    // }
+
+    // .andWhere('board.userId = :userId', { userId: user.id })
+
+    // console.log(deleted, '삭제 성공!')
+
+    // // DB에 해당 데이터가 없는경우 에러 처리
+    // if (result.length === 0) {
+    //   throw new NotFoundException('본인의 게시물만 지울 수 있습니다!')
+    // }
+
+    // deleted 후 affected가 1일 경우 제대로 지워짐
+    // if (result.affected === 0) {
+    //   throw new NotFoundException(`Cant't find Board with id ${id}`)
+    // }
   }
 }
