@@ -28,15 +28,22 @@ export class BoardsController {
   getAllBoard(): Promise<Board[]> {
     return this.boardsService.getAllBoards()
   }
-  @Post()
-  @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoard: CreateBoardDto, @GetUser() user: User): Promise<Board> {
-    return this.boardsService.createBoard(createBoard, user)
+
+  @Get('/my')
+  getMyBoard(@GetUser() user: User): Promise<Board[]> {
+    console.log(user)
+    return this.boardsService.getMyBoards(user)
   }
 
   @Get('/:id')
   getBoardById(@Param('id') id: number): Promise<Board> {
     return this.boardsService.getBoardById(id)
+  }
+
+  @Post()
+  @UsePipes(ValidationPipe)
+  createBoard(@Body() createBoard: CreateBoardDto, @GetUser() user: User): Promise<Board> {
+    return this.boardsService.createBoard(createBoard, user)
   }
 
   @Delete('/:id')
